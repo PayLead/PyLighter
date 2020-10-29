@@ -1,0 +1,114 @@
+.char_display {
+    font-size: <% char_font_size %> ;
+    margin: 2px 0 2px 0;
+    padding:0;
+    height: 1.3em;
+    width: auto;
+    overflow: visible;
+    display: inline-block;
+    line-height: 0.1em;
+}
+
+.sentence_number_input {
+    width: fit-content;
+    align-self: center;
+    font-weight: bold;
+}
+
+.delete_chunk_button {
+    background-color: #f44336;
+    color:#fafafa;
+    width: 26px;
+    height: 26px;
+    padding: 0px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+.invisible {
+    display: none;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
+    border-radius: 4px;
+    padding:1em 2em 1em 2em;
+    margin:1em 1em 1em 1em;
+    /* padding:2rem; */
+    background-color: #fafafa;
+}
+
+.card_header {
+    margin-top: 1em;
+}
+
+.chunk_tag {
+    height:fit-content;
+    border-radius: 4px 25px 25px 4px;
+}
+
+.chunk_text_size {
+    font-size: medium;
+}
+
+.label_button {
+    border-radius: 4px;
+    width: fit-content;
+    min-width: 40px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.move_button {
+    border-radius: 4px;
+    width: 7em;
+    height: 2.2em;
+    font-size: medium;
+}
+
+.move_buttons_margin {
+    margin: 0 1em 0 1em;
+}
+
+.footer_button {
+    border-radius: 4px;
+    width: 100px;
+    height: 2.2em;
+    font-size: medium;
+}
+
+.footer_margin {
+    margin: 0 1em 1em 1em;
+}
+
+div.output_subarea {
+    padding: 0px;
+}
+
+.jupyter-button:focus:enabled {
+    outline: none !important;
+}
+
+.jupyter-button.mod-info {
+    background-color: #0DB9DD;
+}
+
+.jupyter-button.mod-success {
+    background-color: #51B57F;
+}
+
+.jupyter-button.mod-warning  {
+    background-color: #FED765;
+}
+
+.jupyter-button.mod-danger {
+    background-color: #ED6855;
+}
+.widget-inline-hbox.widget-checkbox {
+    width: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+<% colors %>
