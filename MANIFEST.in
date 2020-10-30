@@ -1,0 +1,4 @@
+include pylighter/js/*
+include pylighter/css/*
+include pylighter/toast/*
+include pylihgter/shortcut_helper/shortcut_helper.js

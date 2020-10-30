@@ -1,5 +1,6 @@
-from shortcut_helper.shortcut_helper import Shortcut
 import ipywidgets
+
+from pylighter.shortcut_helper.shortcut_helper import Shortcut
 
 # -----------------------------------------------------------
 # Files paths
@@ -12,7 +13,7 @@ ANNOTATION_SAVE_PATH = "annotation.csv"
 # -----------------------------------------------------------
 
 LABELS_NAMES = [
-    "a_big_label",
+    "l1",
     "l2",
     "l3",
     "l4",

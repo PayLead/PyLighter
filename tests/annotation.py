@@ -16,14 +16,14 @@ from pylighter import Annotation
     ],
 )
 def test_init_labels(labels, expected):
-    sentences = ["This"]
-    annotation = Annotation(sentences, labels=labels)
+    corpus = ["This"]
+    annotation = Annotation(corpus, labels=labels)
     assert annotation.labels == expected
 
 
 def test_select_new_labeliser():
-    sentences = ["This is a sentence"]
-    annotation = Annotation(sentences)
+    corpus = ["This is a sentence"]
+    annotation = Annotation(corpus)
 
     assert annotation.selected_labeliser == annotation.labels_names[0]
 
@@ -49,8 +49,8 @@ def test_select_new_labeliser():
 def test_labelise(labels, start_index, char_index, expected):
     labels_names = ["1", "2", "3"]
 
-    sentences = ["This is a sentence"]
-    annotation = Annotation(sentences, labels=[labels], labels_names=labels_names)
+    corpus = ["This is a sentence"]
+    annotation = Annotation(corpus, labels=[labels], labels_names=labels_names)
 
     assert annotation.chunks.to_labels() == annotation.labels[0]
 
@@ -81,8 +81,8 @@ def test_labelise(labels, start_index, char_index, expected):
 def test_eraser(labels, start_index, char_index, expected):
     labels_names = ["1", "2", "3"]
 
-    sentences = ["This is a sentence"]
-    annotation = Annotation(sentences, labels=[labels], labels_names=labels_names)
+    corpus = ["This is a sentence"]
+    annotation = Annotation(corpus, labels=[labels], labels_names=labels_names)
 
     assert annotation.chunks.to_labels() == annotation.labels[0]
 
@@ -105,18 +105,18 @@ def test_eraser(labels, start_index, char_index, expected):
         (3, 1, 4),
     ],
 )
-def test_change_sentence(start_index, direction, expected):
-    sentences = ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4"]
-    annotation = Annotation(sentences, start_index=start_index, save_path="/dev/null")
+def test_change_document(start_index, direction, expected):
+    corpus = ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4"]
+    annotation = Annotation(corpus, start_index=start_index, save_path="/dev/null")
 
     assert annotation.current_index == start_index
 
-    annotation._change_sentence(button=None, direction=direction)
+    annotation._change_document(button=None, direction=direction)
     assert annotation.current_index == expected
 
 
 @pytest.mark.parametrize(
-    "sentences, labels",
+    "corpus, labels",
     [
         (
             ["Test", "Save", "!"],
@@ -128,10 +128,10 @@ def test_change_sentence(start_index, direction, expected):
         ),
     ],
 )
-def test_save(sentences, labels):
+def test_save(corpus, labels):
     save_path = "/tmp/" + str(datetime.now()).replace(" ", "_")
     annotation = Annotation(
-        sentences,
+        corpus,
         labels=labels,
         save_path=save_path,
     )
@@ -143,8 +143,8 @@ def test_save(sentences, labels):
 
     df = pd.read_csv(save_path, sep=";")
 
-    assert "sentences" in df.columns
+    assert "document" in df.columns
     assert "labels" in df.columns
 
-    assert df.sentences.to_list() == sentences
+    assert df.document.to_list() == corpus
     assert df.labels.apply(ast.literal_eval).to_list() == labels

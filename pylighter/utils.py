@@ -1,6 +1,8 @@
 import colorsys
 from dataclasses import dataclass
 from pathlib import Path
+import pkgutil
+
 import pandas as pd
 
 
@@ -17,7 +19,8 @@ def text_parser(file_name, **kwargs):
     file_content : str
         The content of the file
     """
-    file_content = Path(file_name).read_text()
+
+    file_content = str(pkgutil.get_data("pylighter", file_name), "utf-8")
     file_content = file_content.replace("\n", "")
 
     for key in kwargs:
@@ -45,19 +48,19 @@ def chunk_html_display(text):
     return f"{text}"
 
 
-def annotation_to_csv(sentences, labels, additional_outputs_values, file_path):
-    df = pd.DataFrame(data={"sentences": sentences, "labels": labels})
+def annotation_to_csv(corpus, labels, additional_outputs_values, file_path):
+    df = pd.DataFrame(data={"document": corpus, "labels": labels})
     if additional_outputs_values is not None:
         df = pd.concat([df, additional_outputs_values], axis=1)
     df.to_csv(file_path, sep=";", index=False)
 
 
-def assert_input_consistency(sentences, labels, start_index):
+def assert_input_consistency(corpus, labels, start_index):
     if labels:
-        assert len(sentences) == len(labels)
+        assert len(corpus) == len(labels)
 
     assert start_index >= 0
-    assert start_index < len(sentences)
+    assert start_index < len(corpus)
 
 
 def compute_selected_label_color(str_color_hex):

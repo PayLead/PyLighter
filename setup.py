@@ -4,19 +4,21 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="example-pkg-YOUR-USERNAME-HERE",  # Replace with your own username
+    name="pylighter",
     version="0.0.1",
-    author="Example Author",
-    author_email="author@example.com",
-    description="A small example package",
+    author="Etienne Turc",
+    author_email="etienne.turc@paylead.fr",
+    description="Annotation tool on Jupyter for NER tasks",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
-    packages=setuptools.find_packages(),
+    url="https://github.com/PayLead/PyLighter",
+    # packages=setuptools.find_packages(),
+    packages=["pylighter", "pylighter.shortcut_helper"],
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.6",  # How to know ?
+    python_requires=">=3.6",
 )

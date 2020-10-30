@@ -1,17 +1,217 @@
 # PyLighter: Annotation tool for NER tasks
 
-What it is 
+PyLighter is a tool that allows data scientists to annotate a corpus of document directly on Jupyter for NER (Named Entity Recognition) tasks.
+
+![screenshot](screenshot)
 
 ## Contents
 
-## Install
+- [Installation](#installation)
+- [Basic usage](#basic-usage)
+- [Advanced usage](#advanced-usage)
+    - [Using an already annotated corpus](#using-an-already-annotated-corpus)
+    - [Changing labels names](#changing-labels-names)
+    - [Document styling](#document-styling)
+    - [Adding additional information](#adding-additional-information)
+    - [Adding additional outputs](#adding-additional-outputs)
+    - [Using keyboard shortcuts](#using-keyboard-shortcuts)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+- [Credits](#credits)
 
-how to install
+## Installation
 
-## Usage 
+Pypi: [url](url)
 
-how to use it
+```
+pip install pylighter
+```
 
-## Contributors
+Source: [url](url)
+```
+git clone url
+cd PyLighter
+python setup.py install
+```
+
+## Demos
+
+The [demo](url_to_demo) folder contains working examples of PyLighter in use. To view them, open any of the ipnyb files in Jupyter.
+
+## Basic usage
+
+The use case of PyLighter is to easily annotate a corpus in Jupyter. So let's first define a corpus for this example:
+
+```python
+corpus = ["Sentence 1", "Sentence 2", "Sentence 3"]
+```
+
+Now let's start annotating !
+
+```python
+from pylighter import Annotation
+
+annotation = Annotation(corpus)
+```
+
+Running that cell gives you the following output:
+
+![corpus_init_image](img)
+
+You can know start annotating entities using the predefined labels _l1_, _l2_, etc. 
+
+When your annotation is finished, you can either click on the save button or retrieve the results in the current Notebook. 
+- The save button will save the results in a csv file in [filename](filename) with two columns: the documents and the labels.
+- You can access the labels of your annotations in `annotation.labels`
+
+Note: the given labels are in IOB2 format. 
+
+## Advanced usage
+
+The above example works just fine but PyLighter can be customized to best fit your specific use case.
+
+### Using an already annotated corpus
+
+In most cases, you want to use an already annotated corpus or simply continue your annotation.
+
+To this, you can use the argument named `labels` with the labels of the corpus. Moreover, if you stopped at the i<sup>th</sup> document, you can directly get back to where you stopped with `start_index=i`.
+
+![img_of_the_demo](im)
+
+You can see more on that with [this](link_to_the_demo) demo.
+
+### Changing labels names
+
+PyLighter uses _l1_, _l2_, ...., _l7_ as default labels names, but in most cases, you want to have explicit labels such as _Noun_, _Verb_, etc. 
+
+You can define your own labels names with the argument `labels_names`. You can also define your own colors for your labels with the argument `labels_colors` in HEX format.
+
+![labels_names](labels_names)
+
+You can see more on that with [this](link_to_the_demo) demo.
+
+### Document styling
+
+You can adjust the font size, the minimal distance between two characters and the size of spaces with the argument `char_params`.
+
+Default value for char_params is:
+```python
+# Each field expects css value as a string (ex:"10px", "1em", "large", etc.)
+char_params = {
+    "font_size": "medium", 
+    "width_white_space": "1Opx",
+    "min_width_between_chars": "4px",
+}
+```
+
+### Adding additional information
+
+In some cases, you may want to know additional information about the current document, such as the source of it.
+
+To do this, you can use the argument `additional_infos`. This argument must be a pandas DataFrame of shape (_size of the corpus_, _number of additional information_). The i<sup>th</sup> row of the DataFrame will be associated with the i<sup>th</sup> element of the corpus.
+
+The elements of the given DataFrame need to have a proper string representation to be correctly displayed.
+
+For instance, to add the source to each element of the corpus:
+```python
+import pandas as pd
+
+# define corpus of size 4
+additional_infos = pd.DataFrame({"source":["Wikipedia", "Medium", "Wikipedia", "Github"]})
+annotation = Annotation(corpus, additional_infos=additional_infos)
+```
+
+The result will be:
+
+![additional_infos_img](img)
+
+You can see more on that with [this](link_to_the_demo) demo.
+
+### Adding additional outputs
+
+In some cases, you want to flag a document as difficult to annotate, or spot as wrong, or give a value that estimates your confidence in your annotation, etc. In short, you need to return additional information.
+
+To do this, you can use the argument: `additional_outputs_elements`. This argument expects a list of `pylighter.AdditionnalOutputElement`.
+
+A `pylighter.AdditionnalOutputElement` is defined like this:
+```python
+from pyligher import AdditionnalOutputElement
+
+AdditionnalOutputElement(
+    name="name_of_my_element",
+    display_type="type_of_display" # checkbox, int_text, float_text, text, text_area
+    description="Description of the element to display",
+    default_value="Default value for the element"
+)
+```
+
+Here is an example:
+
+![aditionnal_output_img](img)
+
+Note: Additional outputs will be added to the save file. But you can also retrieve them with `annotation.additional_outputs_values`. You can also use previously returned additional outputs values with the argument: `additional_outputs_values` (same as the label).
+
+You can see more on that with [this](link_to_the_demo) demo.
+
+### Using keyboard shortcuts
+
+Annotation tasks are pretty boring. Thus you may want to use keyboard shortcuts to easily change documents or to select an other label.
+
+By default, there are only a few shortcuts defined:
+- next: **Alt + n**
+- previous: **Alt + p**
+- skip: **Alt + s**
+- save: **Shift + Alt + s**
+
+However, you can fully customize them with the arguments: `standard_shortcuts` and `labels_shorcuts`. The `standard_shortcuts` argument is used to redefined shortcuts for the standard buttons such as the next button whereas the 
+
+A shortcut is defined like this:
+```python
+from pylighter import Shortcut
+
+Shortcut(
+    name="skip"  # Name of the button to bind on (ex: "next", "skip") or name of the label (ex: "l1", "l2", or one you defined)
+    key="Ò"  # Usually represents the character that is displayed.
+    code="KeyS"  # Usually represents the key that is pressed.
+    shift_key=False  # Wether the shift key is pressed
+    alt_key=True
+    ctrl_key=False
+)
+```
+
+It is pretty hard to know what is the value for the `key` and the value for the `code`. It depends on a lot of different factors such as your keyboard, your browser, etc.
+
+Thus, you can use the `ShortcutHelper` to pick the right shortcut. Here is an example of it.
+
+```python
+from pylighter import ShortcutHelper
+
+ShortcutHelper()
+```
+
+![shortcut helper img](img)
+
+You can see more on that with [this](link_to_the_demo) demo.
+
+<!-- ### Full Api
+
+Parse annotation docstring and put it here ? -->
+
+## Testing
+
+PyLighter uses _pytest_. Thus, tests can be run with:
+```
+pytest tests/*
+```
+
+<!-- ## Contributing
+
+Currently nothing has be done there -->
 
 ## License
+
+License MIT
+
+<!-- ## Credits -->
+

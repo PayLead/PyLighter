@@ -1,27 +1,22 @@
 import functools
 
-from IPython.display import Javascript, display
+from IPython.display import Javascript, clear_output, display
 from ipywidgets import HTML, BoundedIntText, Button, GridBox, HBox, Layout, VBox
 
-import config
-import utils
+from pylighter import config, utils
 
 # -----------------------------------------------------------
 # Main display
 # -----------------------------------------------------------
 
 
-def display_header(
-    current_index, number_sentences, move_to_function, df_additional_infos
-):
+def display_header(current_index, corpus_size, move_to_function, df_additional_infos):
     """
-    Display the header of the annotation composed by the index of the current sentence
-    (that can be changed via an input), the number of total sentences and additionnal
-    information relative to the current sentence.
+    Display the header of the annotation composed by the index of the current document
+    (that can be changed via an input), the size of the corpus and additionnal
+    information relative to the current document.
     """
-    header_display = [
-        instantiate_title(current_index, number_sentences, move_to_function)
-    ]
+    header_display = [instantiate_title(current_index, corpus_size, move_to_function)]
 
     if df_additional_infos is not None:
         header_display.append(
@@ -34,40 +29,40 @@ def display_header(
     display(vbox)
 
 
-def instantiate_title(current_index, number_sentences, move_to_function):
+def instantiate_title(current_index, corpus_size, move_to_function):
     """
     Instantiate the ipywidgets elements that will be used to display the index of the
-    current sentence (that can be changed via an input) and the number of total sentences.
+    current document (that can be changed via an input) and the size of the corpus.
     """
     title_layout = Layout(display="flex", flex_flow="row", justify_content="center")
-    title_html = HTML("<h4>Sentence <b>n°</b></h4>")
+    title_html = HTML("<h4>Document <b>n°</b></h4>")
 
-    # Input to display the index of the current sentence
-    sentence_number_input = BoundedIntText(
+    # Input to display the index of the current document
+    document_number_input = BoundedIntText(
         value=current_index,
         min=0,
-        max=number_sentences - 1,
+        max=corpus_size - 1,
         continuous_update=False,  # Only triggers the observer when unselected
     )
-    sentence_number_input.add_class("sentence_number_input")
+    document_number_input.add_class("document_number_input")
 
-    # Add observer to the input area in order to move to any sentence
-    sentence_number_input.observe(
+    # Add observer to the input area in order to move to any document
+    document_number_input.observe(
         functools.partial(
-            sentence_number_observer,
+            document_number_observer,
             current_index=current_index,
             move_function=move_to_function,
         ),
         "value",
     )
-    number_sentences_html = HTML(f"<h4><b>/ {number_sentences-1}</b></h4>")
+    corpus_size_html = HTML(f"<h4><b>/ {corpus_size-1}</b></h4>")
 
     return HBox(
-        [title_html, sentence_number_input, number_sentences_html], layout=title_layout
+        [title_html, document_number_input, corpus_size_html], layout=title_layout
     )
 
 
-def sentence_number_observer(change, current_index, move_function):
+def document_number_observer(change, current_index, move_function):
     move_function(button=None, direction=(change.new - current_index))
 
 
@@ -143,7 +138,7 @@ def preload_core(obj, **kwargs):
 
 
 def instantiate_core(
-    sentence,
+    document,
     char_params,
     char_on_click,
     labels_names,
@@ -152,11 +147,11 @@ def instantiate_core(
     label_on_click,
 ):
     """
-    Instantiate the core elements (ie, the toolbox, the sentence and the chunk area).
+    Instantiate the core elements (ie, the toolbox, the document and the chunk area).
     """
 
-    sentence_display, char_buttons, labels_buttons = instantiate_sentence(
-        sentence,
+    document_display, char_buttons, labels_buttons = instantiate_document(
+        document,
         char_params,
         char_on_click,
         labels_names,
@@ -167,7 +162,7 @@ def instantiate_core(
     chunks_area_display = instantiate_chunks_area(labels_names)
 
     core_display = GridBox(
-        children=[sentence_display, chunks_area_display],
+        children=[document_display, chunks_area_display],
         layout=Layout(
             width="100%",
             grid_template_columns="60% 40%",
@@ -213,8 +208,8 @@ def instantiate_toolbox(
     return labels_display, labels_buttons
 
 
-def instantiate_sentence(
-    sentence,
+def instantiate_document(
+    document,
     char_params,
     char_on_click,
     labels_names,
@@ -223,10 +218,10 @@ def instantiate_sentence(
     label_on_click,
 ):
     """
-    Instantiate the sentence display.
-    A sentence composed of n chars is displayed as n buttons.
+    Instantiate the document display.
+    A document composed of n chars is displayed as n buttons.
     """
-    buttons = [None] * len(sentence)
+    buttons = [None] * len(document)
     buttons_display = []
     current_word = []
 
@@ -234,7 +229,7 @@ def instantiate_sentence(
     space_layout = Layout(min_width=char_params["width_white_space"])
 
     # Create the correct button associated to each char
-    for char_index, char in enumerate(sentence):
+    for char_index, char in enumerate(document):
         # Create buton
         button_layout = char_layout
         if char == " ":
@@ -269,12 +264,12 @@ def instantiate_sentence(
             flex_flow="row wrap",
         ),
     )
-    sentence_display = VBox(
+    document_display = VBox(
         [toolbox_display, divider, hbox],
     )
-    sentence_display.add_class("card")
+    document_display.add_class("card")
 
-    return sentence_display, buttons, labels_buttons
+    return document_display, buttons, labels_buttons
 
 
 def instantiate_chunks_area(labels_names):
@@ -406,22 +401,26 @@ def display_footer(save_function, quit_function, shortcuts_displays_helpers):
     display(hbox)
 
 
-def display_quit_text(current_index, n_sentences, start_index):
+def display_quit_text(current_index, corpus_size, start_index):
     display(
         HTML(
             f"""Good job, you annotated <b>{abs(current_index - start_index)}</b>
-            sentences ! Keep up the good work !"""
+            documents ! Keep up the good work !"""
         )
     )
 
-    if n_sentences != current_index:
+    if corpus_size != current_index:
         display(
             HTML(
                 f"""<p>If you want to continue where you left, make sure to keep the
-                    index of the last sentence:
+                    index of the last document:
                     <h4 style='color:#f44336'><b>{current_index}</b></h4><p>"""
             ),
         )
+
+
+def clear_display():
+    clear_output(wait=True)
 
 
 # -----------------------------------------------------------
@@ -491,7 +490,9 @@ def prepare_toast():
 
 def show_toast(msg, success):
     js = utils.text_parser(
-        "toast/toast.js", success_type="success" if success else "error", toast_msg=msg
+        "toast/toast.js",
+        success_type="success" if success else "error",
+        toast_msg=msg,
     )
     display(Javascript(js))
 

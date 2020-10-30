@@ -1,13 +1,12 @@
 import threading
 
-from IPython.display import clear_output
-
-import config
-import display as display_helper
-from shortcut_helper import shortcut_helper
-import utils
 import pandas as pd
-from chunk_models import Chunk, Chunks
+
+from pylighter import config
+from pylighter import display as display_helper
+from pylighter import utils
+from pylighter.chunk_models import Chunk, Chunks
+from pylighter.shortcut_helper import shortcut_helper
 
 
 class Annotation:
@@ -21,37 +20,36 @@ class Annotation:
 
     def __init__(
         self,
-        sentences,
+        corpus,
         labels=None,
         start_index=0,
         save_path=config.ANNOTATION_SAVE_PATH,
         labels_names=config.LABELS_NAMES,
         labels_colors=config.DEFAULT_COLORS,
-        labels_shortcuts=None,
         additional_infos=None,
         additional_outputs_values=None,
         additional_outputs_elements=None,
-        additional_buttons=None,
-        shortcuts=config.SHORTCUTS,
+        standard_shortcuts=config.SHORTCUTS,
+        labels_shortcuts=None,
         char_params=config.CHAR_PARAMS,
     ):
         """
-        Class that starts the user inteface to annotate the given sentences.
+        Class that starts the user inteface to annotate the given corpus.
 
         Parameters
         ----------
-        sentences : List[str]
-             The sentences to annotate.
+        corpus : List[str]
+             The corpus to annotate.
         labels : List[List[str]], optional
-            The labels of the sentences. It must have the same length as sentences.
+            The labels of the documents. It must have the same length as documents.
             Moreover, the i-th label must have the same length as the number of
-            characters of the i-th sentence.
-            By default, none of the sentences are annotated.
+            characters of the i-th document.
+            By default, none of the documents are annotated.
         start_index : int, optional
-            The index of the sentence to start on. Default value is 0.
+            The index of the document to start on. Default value is 0.
         save_path : str, optional
-            File path to store the annotated sentences into a csv when clicking the save button.
-            By default, the (sentences, lables) are stored in config.ANNOTATION_SAVE_PATH.
+            File path to store the annotated corpus into a csv when clicking the save button.
+            By default, the (document, labels) are stored in config.ANNOTATION_SAVE_PATH.
         labels_names : List[str], optional
             The names of your labels. Default value is config.LABELS_NAMES.
         labels_colors : List[str], optional
@@ -63,17 +61,23 @@ class Annotation:
             one of the label button only if they share the same name.
             By default, none of the labels buttons have keyboard shortcuts.
         additional_infos : pd.DataFrame, optional
-            Dataframe of size (#sentences, n) containing additionnal infos to display
-            for each sentence. By default, no additional infos are displayed.
-        additional_outputs : List[AdditionnalOutput], optional
-            [description], by default None
-        additional_buttons : [type], optional
-            [description], by default None
+            Dataframe of size (size of the corpus, n) containing additionnal infos to
+            display for each document. By default, no additional infos are displayed.
+        additional_outputs_elements : List[AdditionnalOutputElement], optional
+            List containing additional elements to display. 5 elements type are supported:
+            checkbox, int_text, float_text, text, text_area. By default, there won't be any
+            additional outputs.
+        additional_outputs_values : pandas.DataFrame, optional
+            DataFrame of size (size of the corpus, n) containing the values of additional
+            outputs for each document. If additional_outputs_elements are given, then the
+            columns of this DataFrame must match the names of the elements given.
+            By default, it will be initialised with default values given by the
+            additional_outputs_elements if it exists.
         shortcuts : List[Shortcut], optional
             Keyboard shortcuts for the different buttons (Next, Previous, Skip and Save).
             By default, it uses the keyboard shortcuts defined in config.SHORTCUTS
         char_params : Dict[str, str], optional
-            Parameters to modify the display of the characters in the sentence.
+            Parameters to modify the display of the characters in the document.
             The correct values are:
                 min_width_between_chars -- Min distance between two chars. Expects a css
                                             value as string (ex: "4px").
@@ -82,12 +86,12 @@ class Annotation:
                 font_size -- Size of the font. Expects a css value as string (ex: "medium").
         """
         # Check input coherance
-        utils.assert_input_consistency(sentences, labels, start_index)
+        utils.assert_input_consistency(corpus, labels, start_index)
 
         # Init "global" variables
         self.start_index = start_index
         self.current_index = start_index
-        self.sentences = sentences
+        self.corpus = corpus
         self.labels = self._init_labels(labels)
         self.save_path = save_path
         self.char_params = char_params
@@ -99,7 +103,7 @@ class Annotation:
         self.labels_colors = self._init_labels_colors(labels_colors)
         self.threads = []
 
-        all_shortcuts = shortcuts[:]
+        all_shortcuts = standard_shortcuts[:]
         if labels_shortcuts:
             all_shortcuts += labels_shortcuts
         self.shortcuts_displays_helpers = (
@@ -120,8 +124,8 @@ class Annotation:
         """
         if not labels:
             labels = []
-            for sentence in self.sentences:
-                labels.append(["O"] * len(sentence))
+            for document in self.corpus:
+                labels.append(["O"] * len(document))
 
         return labels
 
@@ -136,7 +140,7 @@ class Annotation:
             # Create empty dataframe if none is given
             columns = [element.name for element in additional_outputs_elements]
             self.additional_outputs_values = pd.DataFrame(
-                columns=columns, index=range(len(self.sentences))
+                columns=columns, index=range(len(self.corpus))
             )
         else:
             # Use given data
@@ -160,12 +164,12 @@ class Annotation:
 
     def _annotate(self):
         """
-        Method to annotate the current sentence. It is responsible for setting up the
+        Method to annotate the current document. It is responsible for setting up the
         user interface and the variables needed on buttons clicked.
         """
 
-        # Init variables specific to the current sentence
-        self.sentence = self.sentences[self.current_index]
+        # Init variables specific to the current document
+        self.document = self.corpus[self.current_index]
         self.chunks = Chunks(labels=self.labels[self.current_index])
         self.selected_labeliser = self.labels_names[0]
         self.label_start_index = None
@@ -183,19 +187,19 @@ class Annotation:
         # Display header
         display_helper.display_header(
             self.current_index,
-            len(self.sentences),
-            self._change_sentence,
+            len(self.corpus),
+            self._change_document,
             self.additional_infos,
         )
 
         # Display moving buttons
         display_helper.display_top_buttons(
-            self._change_sentence,
+            self._change_document,
             self._clear_current,
             self.shortcuts_displays_helpers,
         )
 
-        # Display sentence, toolbox and chunk area
+        # Display document, toolbox and chunk area
         utils.wait_for_threads(self.threads)
         display_helper.display_core(self.preloaded_displays.current["core_display"])
         self.char_buttons = self.preloaded_displays.current["char_buttons"]
@@ -204,7 +208,7 @@ class Annotation:
         # Display current chunks
         for chunk in self.chunks.chunks:
             self._sync_chunks(
-                chunk, self.sentence[chunk.start_index : chunk.end_index + 1]
+                chunk, self.document[chunk.start_index : chunk.end_index + 1]
             )
 
         if self.additional_outputs_elements:
@@ -234,7 +238,7 @@ class Annotation:
 
     def _async_load(self, preloaded, direction):
         """
-        Compute the core display (ie toolbox, sentence and chunk area) and stores it in
+        Compute the core display (ie toolbox, document and chunk area) and stores it in
         the preloaded object if not already precomputed. The displays are computed in
         other threads, so make sure to join the threads before accessing/updating any
         value in the preloaded object.
@@ -249,19 +253,19 @@ class Annotation:
                 char_buttons {List[ipywidgets.Button]}: The list of buttons for each char.
                 labels_buttons {List[ipywidgets.Button]}: The list of buttons fr each label.
         direction : int
-            Represents the direction (and the distance) to the next sentence. For instance,
-            if direction equals 2 then it preloads the sentence at index current index + 2.
+            Represents the direction (and the distance) to the next document. For instance,
+            if direction equals 2 then it preloads the document at index current index + 2.
         """
         if (
             not preloaded
-            and self.current_index + direction < len(self.sentences)
+            and self.current_index + direction < len(self.corpus)
             and self.current_index + direction >= 0
         ):
             thread = threading.Thread(
                 target=display_helper.preload_core,
                 kwargs={
                     "obj": preloaded,
-                    "sentence": self.sentences[self.current_index + direction],
+                    "document": self.corpus[self.current_index + direction],
                     "char_params": self.char_params,
                     "char_on_click": self._labelise,
                     "labels_names": self.labels_names,
@@ -326,7 +330,7 @@ class Annotation:
             self.label_start_index = None
 
         # Update chunks with the new chunk
-        chunk_text = self.sentence[chunk.start_index : chunk.end_index + 1]
+        chunk_text = self.document[chunk.start_index : chunk.end_index + 1]
         updated_chunks, removed_chunks = self.chunks.add_new_chunk_and_update(chunk)
 
         # Remove the freshly created chunk if the eraser is selected
@@ -367,7 +371,7 @@ class Annotation:
         # Update chunks text
         for chunk_updated in updated_chunks:
             display_helper.update_chunk_text(
-                self.sentence[chunk_updated.start_index : chunk_updated.end_index + 1],
+                self.document[chunk_updated.start_index : chunk_updated.end_index + 1],
                 chunk_updated,
                 delete_chunk_on_click=self._delete_chunk,
             )
@@ -395,9 +399,9 @@ class Annotation:
             undo=True,
         )
 
-    def _change_sentence(self, button, direction, skip=False):
+    def _change_document(self, button, direction, skip=False):
         """
-        Go from the current sentence at index i to the sentence at index i + direction.
+        Go from the current document at index i to the document at index i + direction.
         If skip is True, the current annotation is not added to the labels.
         """
         # Add current annotation to the labels if skip is False
@@ -414,13 +418,13 @@ class Annotation:
         if self.current_index + direction < 0:
             return
 
-        # Move to the next sentence
+        # Move to the next document
         self.current_index += direction
 
         # Clear the current display
-        clear_output(wait=True)
+        display_helper.clear_display()
 
-        if self.current_index >= len(self.sentences):
+        if self.current_index >= len(self.corpus):
             # All done
             self._save()
             self._quit()
@@ -431,23 +435,23 @@ class Annotation:
             self._annotate()
 
     def _clear_current(self, button):
-        # Clearing the current sentence <=> Using the eraser on the whole sentence.
+        # Clearing the current document <=> Using the eraser on the whole document.
         current_labeliser = self.selected_labeliser
         self.selected_labeliser = None
         self.label_start_index = 0
-        self._labelise(None, len(self.sentence) - 1)
+        self._labelise(None, len(self.document) - 1)
         self.selected_labeliser = current_labeliser
 
     def _save(self, button=None, file_path=None):
         """
-        Saves the current state of the sentences and the labels into a csv.
+        Saves the current state of the corpus and the labels into a csv.
         """
         try:
             # Save file in path
             if not file_path:
                 file_path = self.save_path
             utils.annotation_to_csv(
-                self.sentences, self.labels, self.additional_outputs_values, file_path
+                self.corpus, self.labels, self.additional_outputs_values, file_path
             )
 
             # Display success toast
@@ -460,9 +464,9 @@ class Annotation:
 
     def _quit(self, button=None):
         # Display end screen
-        clear_output(wait=True)
+        display_helper.clear_display()
         display_helper.display_quit_text(
-            self.current_index, len(self.sentences), self.start_index
+            self.current_index, len(self.corpus), self.start_index
         )
 
     # --------------------------------------------
@@ -470,4 +474,4 @@ class Annotation:
     # --------------------------------------------
 
     def get_values(self):
-        return self.sentences, self.labels
+        return self.corpus, self.labels

@@ -1,6 +1,5 @@
 import pytest
-
-from chunk_models import Chunk, Chunks
+from pylighter.chunk_models import Chunk, Chunks
 
 
 @pytest.mark.parametrize(
