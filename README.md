@@ -1,8 +1,8 @@
 # PyLighter: Annotation tool for NER tasks
 
-PyLighter is a tool that allows data scientists to annotate a corpus of document directly on Jupyter for NER (Named Entity Recognition) tasks.
+PyLighter is a tool that allows data scientists to annotate a corpus of documents directly on Jupyter for NER (Named Entity Recognition) tasks.
 
-![screenshot](screenshot)
+![screenshot](https://github.com/PayLead/PyLighter/blob/master/media/pylighter.gif)
 
 ## Contents
 
@@ -28,23 +28,30 @@ Pypi: [url](url)
 pip install pylighter
 ```
 
-Source: [url](url)
+Source: [https://github.com/PayLead/PyLighter](https://github.com/PayLead/PyLighter)
 ```
-git clone url
+git clone git@github.com:PayLead/PyLighter.git
 cd PyLighter
 python setup.py install
 ```
 
 ## Demos
 
-The [demo](url_to_demo) folder contains working examples of PyLighter in use. To view them, open any of the ipnyb files in Jupyter.
+The [demo](https://github.com/PayLead/PyLighter/tree/master/demo) folder contains working examples of PyLighter in use. To view them, open any of the ipnyb files in Jupyter.
 
 ## Basic usage
 
 The use case of PyLighter is to easily annotate a corpus in Jupyter. So let's first define a corpus for this example:
 
 ```python
-corpus = ["Sentence 1", "Sentence 2", "Sentence 3"]
+corpus = [
+    "PyLighter is an annotation tool for NER tasks directly on Jupyter. " 
+    + "It aims on helping data scientists easily and quickly annotate datasets. "
+    + "This tool was developed by Paylead.",
+    "PayLead is a fintech company specializing in transaction data analysis. "
+    + "Paylead brings retail and banking together, so customers get rewarded when they buy. " 
+    + "Welcome to the data-for-value economy."
+]
 ```
 
 Now let's start annotating !
@@ -57,15 +64,15 @@ annotation = Annotation(corpus)
 
 Running that cell gives you the following output:
 
-![corpus_init_image](img)
+![screenshot_basic_usage.png](https://github.com/PayLead/PyLighter/blob/master/media/screenshot_basic_usage.png)
 
 You can know start annotating entities using the predefined labels _l1_, _l2_, etc. 
 
 When your annotation is finished, you can either click on the save button or retrieve the results in the current Notebook. 
-- The save button will save the results in a csv file in [filename](filename) with two columns: the documents and the labels.
+- The save button will save the results in a csv file named _annotation.csv_ with two columns: the documents and the labels.
 - You can access the labels of your annotations in `annotation.labels`
 
-Note: the given labels are in IOB2 format. 
+Note: The given labels are in IOB2 format. 
 
 ## Advanced usage
 
@@ -77,9 +84,9 @@ In most cases, you want to use an already annotated corpus or simply continue yo
 
 To this, you can use the argument named `labels` with the labels of the corpus. Moreover, if you stopped at the i<sup>th</sup> document, you can directly get back to where you stopped with `start_index=i`.
 
-![img_of_the_demo](im)
+![screenshot_pre_annotated](https://github.com/PayLead/PyLighter/blob/master/media/screenshot_pre_annotated.png)
 
-You can see more on that with [this](link_to_the_demo) demo.
+You can see more on that with [this](https://github.com/PayLead/PyLighter/blob/master/demo/Annotated_corpus.ipynb) demo.
 
 ### Changing labels names
 
@@ -87,9 +94,9 @@ PyLighter uses _l1_, _l2_, ...., _l7_ as default labels names, but in most cases
 
 You can define your own labels names with the argument `labels_names`. You can also define your own colors for your labels with the argument `labels_colors` in HEX format.
 
-![labels_names](labels_names)
+![screenshot_labels_changed](https://github.com/PayLead/PyLighter/blob/master/media/screenshot_labels_changed.png)
 
-You can see more on that with [this](link_to_the_demo) demo.
+You can see more on that with [this](https://github.com/PayLead/PyLighter/blob/master/demo/Simple_usage.ipynb) demo.
 
 ### Document styling
 
@@ -124,9 +131,9 @@ annotation = Annotation(corpus, additional_infos=additional_infos)
 
 The result will be:
 
-![additional_infos_img](img)
+![screenshot_additional_information](https://github.com/PayLead/PyLighter/blob/master/media/screenshot_additional_information.png)
 
-You can see more on that with [this](link_to_the_demo) demo.
+You can see more on that with [this](https://github.com/PayLead/PyLighter/blob/master/demo/Adding_additional_elements.ipynb) demo.
 
 ### Adding additional outputs
 
@@ -148,11 +155,11 @@ AdditionnalOutputElement(
 
 Here is an example:
 
-![aditionnal_output_img](img)
+![screenshot_additional_outputs](https://github.com/PayLead/PyLighter/blob/master/media/screenshot_additional_outputs.png)
 
 Note: Additional outputs will be added to the save file. But you can also retrieve them with `annotation.additional_outputs_values`. You can also use previously returned additional outputs values with the argument: `additional_outputs_values` (same as the label).
 
-You can see more on that with [this](link_to_the_demo) demo.
+You can see more on that with [this](https://github.com/PayLead/PyLighter/blob/master/demo/Adding_additional_elements.ipynb) demo.
 
 ### Using keyboard shortcuts
 

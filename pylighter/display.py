@@ -1,7 +1,8 @@
 import functools
 
 from IPython.display import Javascript, clear_output, display
-from ipywidgets import HTML, BoundedIntText, Button, GridBox, HBox, Layout, VBox
+from ipywidgets import (HTML, BoundedIntText, Button, GridBox, HBox, Layout,
+                        VBox)
 
 from pylighter import config, utils
 

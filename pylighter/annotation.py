@@ -1,3 +1,4 @@
+import os
 import threading
 
 import pandas as pd
@@ -450,6 +451,7 @@ class Annotation:
             # Save file in path
             if not file_path:
                 file_path = self.save_path
+            file_path = os.path.abspath(file_path)
             utils.annotation_to_csv(
                 self.corpus, self.labels, self.additional_outputs_values, file_path
             )

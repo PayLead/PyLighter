@@ -1,7 +1,7 @@
 import colorsys
+import pkgutil
 from dataclasses import dataclass
 from pathlib import Path
-import pkgutil
 
 import pandas as pd
 
