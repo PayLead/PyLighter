@@ -2,7 +2,9 @@
 
 PyLighter is a tool that allows data scientists to annotate a corpus of documents directly on Jupyter for NER (Named Entity Recognition) tasks.
 
-![screenshot](https://github.com/PayLead/PyLighter/blob/master/media/pylighter.gif)
+<span style="display:block;text-align:center">
+<img src="https://github.com/PayLead/PyLighter/blob/master/media/pylighter.gif" alt="pylighter_gif"/>
+</span>
 
 ## Contents
 
@@ -16,9 +18,9 @@ PyLighter is a tool that allows data scientists to annotate a corpus of document
     - [Adding additional outputs](#adding-additional-outputs)
     - [Using keyboard shortcuts](#using-keyboard-shortcuts)
 - [Testing](#testing)
-- [Contributing](#contributing)
+<!-- - [Contributing](#contributing) -->
 - [License](#license)
-- [Credits](#credits)
+<!-- - [Credits](#credits) -->
 
 ## Installation
 
@@ -124,8 +126,8 @@ For instance, to add the source to each element of the corpus:
 ```python
 import pandas as pd
 
-# define corpus of size 4
-additional_infos = pd.DataFrame({"source":["Wikipedia", "Medium", "Wikipedia", "Github"]})
+# define corpus of size 2
+additional_infos = pd.DataFrame({"source":["Github", "Paylead.fr"]})
 annotation = Annotation(corpus, additional_infos=additional_infos)
 ```
 
@@ -178,11 +180,11 @@ A shortcut is defined like this:
 from pylighter import Shortcut
 
 Shortcut(
-    name="skip"  # Name of the button to bind on (ex: "next", "skip") or name of the label (ex: "l1", "l2", or one you defined)
-    key="Ò"  # Usually represents the character that is displayed.
-    code="KeyS"  # Usually represents the key that is pressed.
-    shift_key=False  # Wether the shift key is pressed
-    alt_key=True
+    name="skip",  # Name of the button to bind on (ex: "next", "skip") or name of the label (ex: "l1", "l2", or one you defined)
+    key="Ò",  # Usually represents the character that is displayed.
+    code="KeyS",  # Usually represents the key that is pressed.
+    shift_key=False,  # Wether the shift key is pressed
+    alt_key=True,
     ctrl_key=False
 )
 ```

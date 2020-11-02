@@ -199,6 +199,8 @@ def instantiate_toolbox(
     )
     eraser_button.add_class("label_button")
     eraser_button.add_class("eraser_color")
+    eraser_button = add_shortcut_to(eraser_button, "eraser", shortcuts_displays_helpers)
+
     labels_buttons.append(eraser_button)
 
     labels_display = HBox(

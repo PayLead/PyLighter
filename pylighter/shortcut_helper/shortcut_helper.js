@@ -1,5 +1,5 @@
 function logKey(e) {
-    // Show shortcut;
+    /* Show shortcut */
     let visible_space = document.getElementById("shortcut-display");
 
     let text_to_display = "key:&nbsp;<b>" + e.key + "</b>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -10,19 +10,19 @@ function logKey(e) {
 
     visible_space.innerHTML = text_to_display;
 
-    // Hide shortcut in hidden state in python format for copy
+    /* Hide shortcut in hidden state in python format for copy */
     let hidden_space = document.getElementById("hidden-shortcut");
-    let shiftKey = "False"
-    let ctrlKey = "False"
-    let altKey = "False"
+    let shiftKey = "False";
+    let ctrlKey = "False";
+    let altKey = "False";
     if (e.shiftKey) {
-        shiftKey = "True"
+        shiftKey = "True";
     }
     if (e.ctrlKey) {
-        ctrlKey = "True"
+        ctrlKey = "True";
     }
     if (e.altKey) {
-        altKey = "True"
+        altKey = "True";
     }
 
     let hidden_text = "{\"key\":\"" + e.key + "\",";
@@ -31,7 +31,7 @@ function logKey(e) {
     hidden_text += " \"ctrl_key\":" + ctrlKey + ",";
     hidden_text += " \"alt_key\":" + altKey + "}";
 
-    hidden_space.innerHTML = hidden_text
+    hidden_space.innerHTML = hidden_text;
 }
 
 function stopListener() {
@@ -43,14 +43,14 @@ function copyToClipboard() {
     let range = document.createRange();
     let selection = window.getSelection();
 
-    hidden_space.style.display = "block"
+    hidden_space.style.display = "block";
 
     range.selectNode(hidden_space);
     selection.removeAllRanges();
     selection.addRange(range);
 
     document.execCommand("copy");
-    hidden_space.style.display = "none"
+    hidden_space.style.display = "none";
 }
 
 function startListener() {
@@ -66,4 +66,4 @@ function startListener() {
 document.getElementsByClassName("stop_shortcut_button_class")[0].addEventListener("click", stopListener);
 document.getElementsByClassName("copy_shortcut_button_class")[0].addEventListener("click", copyToClipboard);
 document.getElementsByClassName("start_shortcut_button_class")[0].addEventListener("click", startListener);
-startListener()
+startListener();

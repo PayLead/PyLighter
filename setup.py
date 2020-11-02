@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/PayLead/PyLighter",
     # packages=setuptools.find_packages(),
-    packages=["pylighter", "pylighter.shortcut_helper"],
+    packages=["pylighter"],
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from IPython.display import Javascript, display
 from ipywidgets import HTML, Button, HBox, Layout
 
+from ..utils import text_parser
+
 
 def create_shortcuts_displays_helpers(shortcuts):
     """
@@ -22,8 +24,9 @@ def create_shortcuts_displays_helpers(shortcuts):
     """
     shortcuts_class_names = {}
     for shortcut in shortcuts:
+        shortcut_name_cleaned = shortcut.name.replace(" ", "_").lower()
         shortcuts_class_names[shortcut.name] = {
-            "class_name": f"id_class_name_for_shortcut_{shortcut.name}",
+            "class_name": f"id_class_name_for_shortcut_{shortcut_name_cleaned}",
             "tooltip": shortcut.to_pretty_string(),
         }
     return shortcuts_class_names
@@ -117,4 +120,10 @@ class ShortcutHelper:
         self.start_listener()
 
     def start_listener(self):
-        display(Javascript(filename="shortcut_helper/shortcut_helper.js"))
+        display(
+            Javascript(
+                text_parser(
+                    "shortcut_helper/shortcut_helper.js",
+                )
+            )
+        )
