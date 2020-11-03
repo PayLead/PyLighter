@@ -211,7 +211,7 @@ Parse annotation docstring and put it here ? -->
 
 PyLighter uses _pytest_. Thus, tests can be run with:
 ```
-pytest tests/*
+pytest
 ```
 
 <!-- ## Contributing
