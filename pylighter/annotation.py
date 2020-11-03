@@ -35,7 +35,7 @@ class Annotation:
         char_params=config.CHAR_PARAMS,
     ):
         """
-        Class that starts the user inteface to annotate the given corpus.
+        Class that starts the user interface to annotate the given corpus.
 
         Parameters
         ----------
@@ -49,7 +49,7 @@ class Annotation:
         start_index : int, optional
             The index of the document to start on. Default value is 0.
         save_path : str, optional
-            File path to store the annotated corpus into a csv when clicking the save button.
+            Path to store the annotated corpus into a csv when clicking the save button.
             By default, the (document, labels) are stored in config.ANNOTATION_SAVE_PATH.
         labels_names : List[str], optional
             The names of your labels. Default value is config.LABELS_NAMES.
@@ -62,17 +62,17 @@ class Annotation:
             one of the label button only if they share the same name.
             By default, none of the labels buttons have keyboard shortcuts.
         additional_infos : pd.DataFrame, optional
-            Dataframe of size (size of the corpus, n) containing additionnal infos to
+            Dataframe of size (size of the corpus, n) containing additional infos to
             display for each document. By default, no additional infos are displayed.
-        additional_outputs_elements : List[AdditionnalOutputElement], optional
+        additional_outputs_elements : List[AdditionalOutputElement], optional
             List containing additional elements to display. 5 elements type are supported:
-            checkbox, int_text, float_text, text, text_area. By default, there won't be any
-            additional outputs.
+            checkbox, int_text, float_text, text, text_area. By default, there won't be
+            any additional outputs.
         additional_outputs_values : pandas.DataFrame, optional
             DataFrame of size (size of the corpus, n) containing the values of additional
             outputs for each document. If additional_outputs_elements are given, then the
             columns of this DataFrame must match the names of the elements given.
-            By default, it will be initialised with default values given by the
+            By default, it will be initialized with default values given by the
             additional_outputs_elements if it exists.
         shortcuts : List[Shortcut], optional
             Keyboard shortcuts for the different buttons (Next, Previous, Skip and Save).
@@ -84,9 +84,9 @@ class Annotation:
                                             value as string (ex: "4px").
                 width_white_space -- Size of a white space. Expects a css value as
                                             string (ex: "10px").
-                font_size -- Size of the font. Expects a css value as string (ex: "medium").
+                font_size -- Size of the font. Expects a css value as string (ex:"large").
         """
-        # Check input coherance
+        # Check input consistency
         utils.assert_input_consistency(corpus, labels, start_index)
 
         # Init "global" variables
@@ -209,12 +209,12 @@ class Annotation:
         # Display current chunks
         for chunk in self.chunks.chunks:
             self._sync_chunks(
-                chunk, self.document[chunk.start_index : chunk.end_index + 1]
+                chunk, self.document[chunk.start_index : chunk.end_index + 1]  # noqa
             )
 
         if self.additional_outputs_elements:
             self.additional_outputs_elements_displays = (
-                display_helper.display_additionnal_outputs(
+                display_helper.display_additional_outputs(
                     self.additional_outputs_elements,
                     self.additional_outputs_values.iloc[self.current_index],
                 )
@@ -250,12 +250,13 @@ class Annotation:
         preloaded : Dict[str, ...]
             Object for storing the values returned by the display if the dict is empty.
             Values are:
-                core_display {ipywidgets.Box}: The widget that represents the core display.
-                char_buttons {List[ipywidgets.Button]}: The list of buttons for each char.
-                labels_buttons {List[ipywidgets.Button]}: The list of buttons fr each label.
+            - core_display {ipywidgets.Box}: The widget that represents the core display.
+            - char_buttons {List[ipywidgets.Button]}: The buttons for every char.
+            - labels_buttons {List[ipywidgets.Button]}: The buttons for every label.
         direction : int
-            Represents the direction (and the distance) to the next document. For instance,
-            if direction equals 2 then it preloads the document at index current index + 2.
+            Represents the direction (and the distance) to the next document.
+            For instance, if the direction equals 2 then it preloads the document at
+            current index + 2.
         """
         if (
             not preloaded
@@ -331,7 +332,7 @@ class Annotation:
             self.label_start_index = None
 
         # Update chunks with the new chunk
-        chunk_text = self.document[chunk.start_index : chunk.end_index + 1]
+        chunk_text = self.document[chunk.start_index : chunk.end_index + 1]  # noqa
         updated_chunks, removed_chunks = self.chunks.add_new_chunk_and_update(chunk)
 
         # Remove the freshly created chunk if the eraser is selected
@@ -359,7 +360,9 @@ class Annotation:
         """
         # Display new char highlight
         display_helper.highlight_chars(
-            char_buttons=self.char_buttons[chunk.start_index : chunk.end_index + 1],
+            char_buttons=self.char_buttons[
+                chunk.start_index : chunk.end_index + 1  # noqa
+            ],
             selected_labeliser=chunk.label,
             labels_names=self.labels_names,
             undo=False,
@@ -372,7 +375,9 @@ class Annotation:
         # Update chunks text
         for chunk_updated in updated_chunks:
             display_helper.update_chunk_text(
-                self.document[chunk_updated.start_index : chunk_updated.end_index + 1],
+                self.document[
+                    chunk_updated.start_index : chunk_updated.end_index + 1  # noqa
+                ],
                 chunk_updated,
                 delete_chunk_on_click=self._delete_chunk,
             )
@@ -394,7 +399,9 @@ class Annotation:
 
         # Remove char chunk highlight
         display_helper.highlight_chars(
-            char_buttons=self.char_buttons[chunk.start_index : chunk.end_index + 1],
+            char_buttons=self.char_buttons[
+                chunk.start_index : chunk.end_index + 1  # noqa
+            ],
             selected_labeliser=chunk.label,
             labels_names=self.labels_names,
             undo=True,

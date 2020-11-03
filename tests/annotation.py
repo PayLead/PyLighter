@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 import pytest
 
-from pylighter import Annotation
+from pylighter import AdditionalOutputElement, Annotation
 
 
 @pytest.mark.parametrize(
@@ -97,22 +97,48 @@ def test_eraser(labels, start_index, char_index, expected):
 
 
 @pytest.mark.parametrize(
-    "start_index, direction, expected",
+    "start_index, direction, skip, expected",
     [
-        (0, 1, 1),
-        (1, -1, 0),
-        (0, -1, 0),
-        (3, 1, 4),
+        (0, 1, False, 1),
+        (1, -1, False, 0),
+        (0, -1, False, 0),
+        (3, 1, False, 4),
+        (0, 3, False, 3),
+        (2, -2, False, 0),
+        (0, 1, True, 1),
+        (1, -1, True, 0),
+        (0, -1, True, 0),
+        (3, 1, True, 4),
+        (0, 3, True, 3),
+        (2, -2, True, 0),
     ],
 )
-def test_change_document(start_index, direction, expected):
+def test_change_document(start_index, direction, skip, expected):
     corpus = ["Sentence 1", "Sentence 2", "Sentence 3", "Sentence 4"]
-    annotation = Annotation(corpus, start_index=start_index, save_path="/dev/null")
+    labels_names = ["1", "2", "3"]
+    annotation = Annotation(
+        corpus,
+        start_index=start_index,
+        labels_names=labels_names,
+        save_path="/dev/null",
+    )
 
     assert annotation.current_index == start_index
 
-    annotation._change_document(button=None, direction=direction)
+    # Labelise word "sentence"
+    annotation.label_start_index = 0
+    annotation._labelise(
+        button=None,
+        char_index=7,
+    )
+    expected_labels = ["B-1", "I-1", "I-1", "I-1", "I-1", "I-1", "I-1", "I-1", "O", "O"]
+
+    annotation._change_document(button=None, direction=direction, skip=skip)
     assert annotation.current_index == expected
+
+    if skip:
+        expected_labels = ["O"] * len(corpus[0])
+    assert annotation.labels[start_index] == expected_labels
 
 
 @pytest.mark.parametrize(
@@ -148,3 +174,141 @@ def test_save(corpus, labels):
 
     assert df.document.to_list() == corpus
     assert df.labels.apply(ast.literal_eval).to_list() == labels
+
+
+@pytest.mark.parametrize(
+    "labels",
+    [
+        ["O", "O", "O", "O"],
+        ["B-2", "I-2", "O", "O"],
+        ["B-2", "B-2", "B-2", "B-2"],
+    ],
+)
+def test_clear(labels):
+    corpus = ["Test"]
+    annotation = Annotation(
+        corpus,
+        labels=[labels],
+    )
+
+    assert annotation.chunks.to_labels() == labels
+    assert annotation.labels[0] == labels
+
+    annotation._clear_current(None)
+
+    assert annotation.chunks.to_labels() == ["O", "O", "O", "O"]
+
+
+def test_additional_infos():
+    additional_infos = pd.DataFrame({"col1": [1, 2], "col2": ["a", "b"]})
+    corpus = ["Test 1", "Test 2"]
+    annotation = Annotation(
+        corpus,
+        additional_infos=additional_infos,
+    )
+
+    assert annotation.additional_infos.shape == (2, 2)
+    assert annotation.additional_infos.col1.to_list() == additional_infos.col1.to_list()
+    assert annotation.additional_infos.col2.to_list() == additional_infos.col2.to_list()
+
+
+@pytest.mark.parametrize(
+    "additional_outputs_elements, additional_outputs_values, new_value, expected",
+    [
+        (
+            [
+                AdditionalOutputElement(
+                    name="element",
+                    display_type="text",
+                    description="Test element",
+                    default_value="testing",
+                )
+            ],
+            None,
+            None,
+            "testing",
+        ),
+        (
+            [
+                AdditionalOutputElement(
+                    name="element",
+                    display_type="text",
+                    description="Test element",
+                    default_value="testing",
+                )
+            ],
+            pd.DataFrame(
+                {"element": ["input additional value 1", "input additional value 2"]}
+            ),
+            None,
+            "input additional value 1",
+        ),
+        (
+            [
+                AdditionalOutputElement(
+                    name="element",
+                    display_type="text",
+                    description="Test element",
+                    default_value="testing",
+                )
+            ],
+            None,
+            "new_value",
+            "new_value",
+        ),
+        (
+            [
+                AdditionalOutputElement(
+                    name="element",
+                    display_type="text",
+                    description="Test element",
+                    default_value="testing",
+                )
+            ],
+            pd.DataFrame(
+                {"element": ["input additional value 1", "input additional value 2"]}
+            ),
+            "new_value",
+            "new_value",
+        ),
+    ],
+)
+def test_additional_outputs(
+    additional_outputs_elements, additional_outputs_values, new_value, expected
+):
+    corpus = ["Test 1", "Test 2"]
+    save_path = "/tmp/" + str(datetime.now()).replace(" ", "_")
+    annotation = Annotation(
+        corpus,
+        additional_outputs_elements=additional_outputs_elements,
+        additional_outputs_values=additional_outputs_values,
+        save_path=save_path,
+    )
+
+    assert len(annotation.additional_outputs_elements_displays) == 1
+    assert annotation.additional_outputs_values.shape == (2, 1)
+
+    if new_value:
+        annotation.additional_outputs_elements_displays[0].value = new_value
+
+    # Change document to save it
+    annotation._change_document(None, direction=1)
+
+    assert annotation.additional_outputs_values.iloc[0]["element"] == expected
+
+    # Assess that the outputs are correctly added
+    annotation._save()
+
+    df = pd.read_csv(save_path, sep=";")
+
+    assert "document" in df.columns
+    assert "labels" in df.columns
+    assert "element" in df.columns
+
+    assert len(df.element.to_list()) == 2
+    assert df.element.to_list()[0] == expected
+
+    if additional_outputs_values is not None:
+        assert df.element.to_list()[1] == additional_outputs_values.iloc[1]["element"]
+    else:
+        assert pd.isna(df.element.to_list()[1])

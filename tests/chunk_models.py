@@ -109,20 +109,3 @@ def test_chunks_to_labels(labels):
     label_output = chunks.to_labels()
 
     assert labels == label_output
-
-
-# @pytest.mark.parametrize(
-#     "labels",
-#     [
-#         ["O", "O", "B-Loc", "I-Loc"],
-#         ["O", "O", "B-Loc", "B-Loc"],
-#         ["B-Loc", "B-Loc", "O", "B-Loc"],
-#         ["B-Loc", "I-Loc", "O", "O"],
-#         ["B-Loc", "O", "O", "O"],
-#         ["B-Loc", "I-Loc", "I-Loc", "I-Loc"],
-#     ],
-# )
-# def test_remove_chunks(labels, idx_chunks_to_remove, expected):
-#     # TODO O(m*n) improve
-#     for chunk in chunks_to_remove[::-1]:
-#         self.remove_chunk_by_id(chunk.id)

@@ -80,7 +80,7 @@ class ShortcutHelper:
 
         # Element to display the shortcut in
         html_shortcut = HTML(
-            "<p id='shortcut-display'>Press the keyboard shortcut that you want to use :)</p>"  # noqa
+            "<p id='shortcut-display'>Press the keyboard keys for the shortcut you want to use !</p>"  # noqa
         )
 
         # Element to hide the python version of the shortcut

@@ -2,3 +2,4 @@ include pylighter/js/*
 include pylighter/css/*
 include pylighter/toast/*
 include pylighter/shortcut_helper/shortcut_helper.js
+include pylighter/loader.html

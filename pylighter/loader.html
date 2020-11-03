@@ -1,0 +1,132 @@
+<style>
+    #swosh-blue {
+        background-image: linear-gradient(to right, rgba(37, 125, 208, 0.3), rgba(37, 125, 208, 1));
+        animation: color-blue 4s linear infinite;
+    }
+
+    #swosh-yellow {
+        background-image: linear-gradient(to right, rgba(255, 222, 123, 0.3), rgba(255, 222, 123, 1));
+        animation: color-yellow 4s linear infinite;
+    }
+
+    #swosh-transparent {
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.6));
+        animation: swosh 2s linear infinite;
+        width: 100px;
+        z-index: 1;
+        transform: skewX(-20deg);
+    }
+
+    .swosh {
+        width: 280px;
+        height: 72px;
+        position: absolute;
+        transform: skewX(-20deg);
+        left: -15px;
+    }
+
+    #parent {
+        position: relative;
+        margin: auto;
+        width: fit-content;
+    }
+
+    @keyframes swosh {
+        0% {
+            left: -115px;
+        }
+
+        40% {
+            left: -115px;
+        }
+
+        80% {
+            left: 365px;
+        }
+
+        100% {
+            left: 365px;
+        }
+    }
+
+    @keyframes color-yellow {
+        0% {
+
+            width: 0px;
+            left: -15px;
+        }
+
+        20% {
+            width: 280px;
+            left: -15px;
+        }
+
+        30% {
+            width: 280px;
+            left: -15px;
+        }
+
+
+        50% {
+            width: 0px;
+            left: 265px;
+        }
+
+        100% {
+            width: 0px;
+            left: 265px;
+        }
+    }
+
+    @keyframes color-blue {
+        0% {
+            width: 0px;
+            left: -15px;
+        }
+
+        50% {
+            width: 0px;
+            left: -15px;
+        }
+
+        70% {
+            width: 280px;
+            left: -15px;
+        }
+
+        80% {
+            width: 280px;
+            left: -15px;
+        }
+
+        100% {
+            width: 0px;
+            left: 265px;
+        }
+    }
+
+    .pylighter-text {
+        font-size: 60px;
+        font-family: Arial, Helvetica, sans-serif;
+        position: inherit;
+        line-height: normal;
+    }
+
+    .white-block {
+        transform: skewX(-20deg);
+        position: absolute;
+        left: 265px;
+        background-color: white;
+        width: 50px;
+        height: 72px;
+    }
+</style>
+<div id="parent">
+    <div id="swosh-transparent" class="swosh"></div>
+    <div id="swosh-blue" class="swosh"></div>
+    <div id="swosh-yellow" class="swosh"></div>
+    <div class="white-block"></div>
+    <div class="pylighter-text">
+        PyLighter
+    </div>
+</div>

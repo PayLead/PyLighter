@@ -1,8 +1,7 @@
 import functools
 
 from IPython.display import Javascript, clear_output, display
-from ipywidgets import (HTML, BoundedIntText, Button, GridBox, HBox, Layout,
-                        VBox)
+from ipywidgets import HTML, BoundedIntText, Button, GridBox, HBox, Layout, VBox
 
 from pylighter import config, utils
 
@@ -14,7 +13,7 @@ from pylighter import config, utils
 def display_header(current_index, corpus_size, move_to_function, df_additional_infos):
     """
     Display the header of the annotation composed by the index of the current document
-    (that can be changed via an input), the size of the corpus and additionnal
+    (that can be changed via an input), the size of the corpus and additional
     information relative to the current document.
     """
     header_display = [instantiate_title(current_index, corpus_size, move_to_function)]
@@ -69,7 +68,7 @@ def document_number_observer(change, current_index, move_function):
 
 def instantiate_additional_infos(current_index, df_additional_infos):
     """
-    Instantiate the ipywidgets elements to display the additionnal information.
+    Instantiate the ipywidgets elements to display the additional information.
     """
     additional_infos = df_additional_infos.iloc[current_index]
     names = additional_infos.keys()
@@ -303,7 +302,7 @@ def instantiate_chunks_area(labels_names):
 
 def display_chunk(chunk, chunk_text, delete_chunk_on_click):
     """
-    Display the given chunk with the given text in the chunk area (following the last one).
+    Display the given chunk with the given text in the chunk area (next to the last one).
     """
     # Create HTML equivalent of the chunk text
     text = HTML(utils.chunk_html_display(chunk_text), layout=Layout(height="10px"))
@@ -336,15 +335,13 @@ def display_chunk(chunk, chunk_text, delete_chunk_on_click):
     chunk_display.remove_class("invisible")
 
 
-def display_additionnal_outputs(
-    additionnal_outputs_elements, additional_outputs_values
-):
+def display_additional_outputs(additional_outputs_elements, additional_outputs_values):
     hbox_elements = ["checkbox"]
 
     # Create elements
     elements_to_display = []
     input_elements = []
-    for element in additionnal_outputs_elements:
+    for element in additional_outputs_elements:
         value = element.default_value
         if additional_outputs_values.notna()[element.name]:
             value = additional_outputs_values[element.name]
@@ -558,38 +555,7 @@ def define_keyboard_shortcuts(shortcuts, shortcuts_class_names):
 
 
 def display_loader():
-    loader = HTML(
-        """
-        <style>
-        .lds-dual-ring {
-            display: flex;
-            margin: auto;
-            width: 80px;
-            height: 80px;
-        }
-        .lds-dual-ring:after {
-            content: " ";
-            display: block;
-            width: 64px;
-            height: 64px;
-            margin: 8px;
-            border-radius: 50%;
-            border: 6px solid #cef;
-            border-color: #cef transparent #cef transparent;
-            animation: lds-dual-ring 1.2s linear infinite;
-        }
-        @keyframes lds-dual-ring {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
-        }
-        </style>
-        <div class="lds-dual-ring"></div>
-        """
-    )
+    loader = HTML(utils.text_parser("loader.html"))
     display(loader)
     return loader
 

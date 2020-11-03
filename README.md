@@ -39,7 +39,7 @@ python setup.py install
 
 ## Demos
 
-The [demo](https://github.com/PayLead/PyLighter/tree/master/demo) folder contains working examples of PyLighter in use. To view them, open any of the ipnyb files in Jupyter.
+The [demo](https://github.com/PayLead/PyLighter/tree/master/demo) folder contains working examples of PyLighter in use. To view them, open any of the ipynb files in Jupyter.
 
 ## Basic usage
 
@@ -141,13 +141,13 @@ You can see more on that with [this](https://github.com/PayLead/PyLighter/blob/m
 
 In some cases, you want to flag a document as difficult to annotate, or spot as wrong, or give a value that estimates your confidence in your annotation, etc. In short, you need to return additional information.
 
-To do this, you can use the argument: `additional_outputs_elements`. This argument expects a list of `pylighter.AdditionnalOutputElement`.
+To do this, you can use the argument: `additional_outputs_elements`. This argument expects a list of `pylighter.AdditionalOutputElement`.
 
-A `pylighter.AdditionnalOutputElement` is defined like this:
+A `pylighter.AdditionalOutputElement` is defined like this:
 ```python
-from pyligher import AdditionnalOutputElement
+from pyligher import AdditionalOutputElement
 
-AdditionnalOutputElement(
+AdditionalOutputElement(
     name="name_of_my_element",
     display_type="type_of_display" # checkbox, int_text, float_text, text, text_area
     description="Description of the element to display",
@@ -199,9 +199,9 @@ from pylighter import ShortcutHelper
 ShortcutHelper()
 ```
 
-![shortcut helper img](img)
+![screenshot_shortcut_helper](https://github.com/PayLead/PyLighter/blob/master/media/screenshot_shortcut_helper.ipynb)
 
-You can see more on that with [this](link_to_the_demo) demo.
+You can see more on that with [this](https://github.com/PayLead/PyLighter/blob/master/demo/Shortcut_helper.ipynb) demo.
 
 <!-- ### Full Api
 
@@ -220,7 +220,7 @@ Currently nothing has be done there -->
 
 ## License
 
-License MIT
+MIT License
 
 <!-- ## Credits -->
 

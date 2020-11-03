@@ -1,7 +1,7 @@
 
 if (
-    e.shiftKey == <% shift_key %> 
-    && e.altKey == <% alt_key %> 
+    e.shiftKey == <% shift_key %>
+    && e.altKey == <% alt_key %>
     && e.ctrlKey == <% ctrl_key %>
     && e.key == "<% key %>"
 ) {

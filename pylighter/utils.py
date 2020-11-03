@@ -1,9 +1,10 @@
 import colorsys
 import pkgutil
 from dataclasses import dataclass
-from pathlib import Path
 
 import pandas as pd
+
+from pylighter import config
 
 
 def text_parser(file_name, **kwargs):
@@ -64,10 +65,12 @@ def assert_input_consistency(corpus, labels, start_index):
 
 
 def compute_selected_label_color(str_color_hex):
-    rgb = tuple(int(str_color_hex.lstrip("#")[i : i + 2], 16) / 255 for i in (0, 2, 4))
-    h, l, s = colorsys.rgb_to_hls(*rgb)
-    l *= 0.8
-    return f"hsl({int(h*360)}, {int(s*100)}%, {int(l*100)}%)"
+    rgb = tuple(
+        int(str_color_hex.lstrip("#")[i : i + 2], 16) / 255 for i in (0, 2, 4)  # noqa
+    )
+    hue, lightness, saturation = colorsys.rgb_to_hls(*rgb)
+    lightness *= 0.8
+    return f"hsl({int(hue*360)}, {int(saturation * 100)}%, {int(lightness * 100)}%)"
 
 
 def wait_for_threads(threads):
@@ -83,12 +86,17 @@ class LabelColor:
     background_color: str
 
 
-class AdditionnalOutputElement:
+class AdditionalOutputElement:
     def __init__(self, name, display_type, description, default_value):
         self.name = name
         self.display_type = display_type
         self.description = description
         self.default_value = default_value
+
+        if display_type not in config.DISPLAY_ELEMENTS.keys():
+            raise ValueError(
+                f"display_type must one of those {config.DISPLAY_ELEMENTS.keys()}"
+            )
 
 
 class PreloadedDisplays:

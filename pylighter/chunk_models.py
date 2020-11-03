@@ -50,7 +50,6 @@ class Chunks:
                 del self.chunks[index]
                 return
 
-    # TODO add tests
     def add_new_chunk_and_update(self, new_chunk):
         start_index = new_chunk.start_index
         end_index = new_chunk.end_index
