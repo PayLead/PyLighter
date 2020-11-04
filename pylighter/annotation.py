@@ -477,10 +477,3 @@ class Annotation:
         display_helper.display_quit_text(
             self.current_index, len(self.corpus), self.start_index
         )
-
-    # --------------------------------------------
-    # On click functions
-    # --------------------------------------------
-
-    def get_values(self):
-        return self.corpus, self.labels

@@ -86,12 +86,36 @@ def test_eraser(labels, start_index, char_index, expected):
 
     assert annotation.chunks.to_labels() == annotation.labels[0]
 
+    annotation._select_new_labeliser(None, len(annotation.labels_buttons) - 1)
     annotation.label_start_index = start_index
-    annotation.selected_labeliser = None
     annotation._labelise(
         button=None,
         char_index=char_index,
     )
+
+    assert annotation.chunks.to_labels() == expected
+
+
+@pytest.mark.parametrize(
+    "labels, expected",
+    [
+        (["B-2", "I-2", "O", "O"], ["O", "O", "O", "O"]),
+        (["B-2", "B-2", "O", "O"], ["O", "B-2", "O", "O"]),
+        (["B-2", "B-2", "I-2", "O"], ["O", "B-2", "I-2", "O"]),
+    ],
+)
+def test_delete_chunk(labels, expected):
+    labels_names = ["1", "2", "3"]
+    corpus = ["Test"]
+
+    annotation = Annotation(corpus, labels=[labels], labels_names=labels_names)
+
+    assert annotation.chunks.to_labels() == annotation.labels[0]
+
+    chunk_to_remove = annotation.chunks.chunks[0]
+    assert chunk_to_remove.start_index == 0
+
+    annotation._delete_chunk(None, chunk_to_remove)
 
     assert annotation.chunks.to_labels() == expected
 
@@ -174,6 +198,29 @@ def test_save(corpus, labels):
 
     assert df.document.to_list() == corpus
     assert df.labels.apply(ast.literal_eval).to_list() == labels
+
+
+@pytest.mark.parametrize(
+    "labels",
+    [
+        ["O", "O", "O", "O"],
+        ["B-2", "I-2", "O", "O"],
+        ["B-2", "B-2", "B-2", "B-2"],
+    ],
+)
+def test_quit(labels):
+    corpus = ["Test"]
+    annotation = Annotation(
+        corpus,
+        labels=[labels],
+    )
+
+    annotation.start_index = 0
+    annotation._labelise(None, 3)
+
+    annotation._quit()
+
+    assert annotation.labels == [labels]
 
 
 @pytest.mark.parametrize(
