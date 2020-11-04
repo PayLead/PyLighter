@@ -1,4 +1,7 @@
-include README.md LICENSE
-graft pylighter
+include README.md LICENSE Makefile tox.ini Changelog.md
 
-global-exclude *.py[cod] __pycache__ *.swp
+graft pylighter
+graft demo
+graft test
+
+global-exclude *.py[cod] __pycache__ *.swp demo/.ipynb_checkpoints/* media/*

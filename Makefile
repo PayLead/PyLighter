@@ -22,6 +22,14 @@ release:
 
 .PHONY: default clean install install-dev upgrade release 
 
+source:
+	python setup.py sdist
+
+build:
+	python setup.py bdist_wheel
+
+.PHONY: source build
+
 testall:
 	tox
 
