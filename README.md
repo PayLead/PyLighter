@@ -18,19 +18,17 @@ PyLighter is a tool that allows data scientists to annotate a corpus of document
     - [Adding additional outputs](#adding-additional-outputs)
     - [Using keyboard shortcuts](#using-keyboard-shortcuts)
 - [Testing](#testing)
-<!-- - [Contributing](#contributing) -->
 - [License](#license)
-<!-- - [Credits](#credits) -->
 
 ## Installation
 
-Pypi: [url](url)
+From Pypi: [url](url)
 
 ```
 pip install pylighter
 ```
 
-Source: [https://github.com/PayLead/PyLighter](https://github.com/PayLead/PyLighter)
+From Github: [https://github.com/PayLead/PyLighter](https://github.com/PayLead/PyLighter)
 ```
 git clone git@github.com:PayLead/PyLighter.git
 cd PyLighter
@@ -47,11 +45,11 @@ The use case of PyLighter is to easily annotate a corpus in Jupyter. So let's fi
 
 ```python
 corpus = [
-    "PyLighter is an annotation tool for NER tasks directly on Jupyter. " 
+    "PyLighter is an annotation tool for NER tasks directly on Jupyter. "
     + "It aims on helping data scientists easily and quickly annotate datasets. "
     + "This tool was developed by Paylead.",
     "PayLead is a fintech company specializing in transaction data analysis. "
-    + "Paylead brings retail and banking together, so customers get rewarded when they buy. " 
+    + "Paylead brings retail and banking together, so customers get rewarded when they buy. "
     + "Welcome to the data-for-value economy."
 ]
 ```
@@ -199,7 +197,7 @@ from pylighter import ShortcutHelper
 ShortcutHelper()
 ```
 
-![screenshot_shortcut_helper](https://github.com/PayLead/PyLighter/blob/master/media/screenshot_shortcut_helper.ipynb)
+![screenshot_shortcut_helper](https://github.com/PayLead/PyLighter/blob/master/media/screenshot_shortcut_helper.png)
 
 You can see more on that with [this](https://github.com/PayLead/PyLighter/blob/master/demo/Shortcut_helper.ipynb) demo.
 
@@ -223,4 +221,3 @@ Currently nothing has be done there -->
 MIT License
 
 <!-- ## Credits -->
-

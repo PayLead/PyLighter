@@ -3,11 +3,7 @@
 
 name: Testing
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -26,11 +22,14 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        # Install test dependencies
         pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # Install project dependencies
+        pip install -e .
     - name: Lint with flake8
       run: |
-        flake8 --config .flake8
+        flake8 pylighter
+        flake8 test
     - name: Test with pytest
       run: |
         pytest

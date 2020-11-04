@@ -7,3 +7,4 @@ pylighter.egg-info
 dist
 *.pyc
 .vscode
+.tox
