@@ -16,7 +16,7 @@ class Annotation:
     """
 
     # --------------------------------------------
-    # Initialisation
+    # Initialization
     # --------------------------------------------
 
     def __init__(
@@ -437,7 +437,7 @@ class Annotation:
             self._save()
             self._quit()
         else:
-            # Continue anotation
+            # Continue annotation
             utils.wait_for_threads(self.threads)
             self.preloaded_displays.update(direction)
             self._annotate()

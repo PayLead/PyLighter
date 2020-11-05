@@ -170,7 +170,7 @@ def test_change_document(start_index, direction, skip, expected):
     [
         (
             ["Test", "Save", "!"],
-            [["B-1", "I-1", " I-1", " I-1"], ["O", "B-1", "I-1", "I-1"], ["O"]],
+            [["B-1", "I-1", "I-1", "I-1"], ["O", "B-1", "I-1", "I-1"], ["O"]],
         ),
         (
             ["Test", "Save", "!"],

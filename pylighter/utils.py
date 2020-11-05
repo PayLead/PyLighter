@@ -56,9 +56,28 @@ def annotation_to_csv(corpus, labels, additional_outputs_values, file_path):
     df.to_csv(file_path, sep=";", index=False)
 
 
+def assert_IOB2_format(labels_list):
+    for labels in labels_list:
+        previous_label = None
+        for label in labels:
+            assert label == "O" or label[:2] == "B-" or label[:2] == "I-"
+
+            if label == "O":
+                previous_label = None
+                continue
+
+            if label[:2] == "B-":
+                previous_label = label[2:]
+
+            else:
+                assert previous_label
+                assert previous_label == label[2:]
+
+
 def assert_input_consistency(corpus, labels, start_index):
     if labels:
         assert len(corpus) == len(labels)
+        assert_IOB2_format(labels)
 
     assert start_index >= 0
     assert start_index < len(corpus)

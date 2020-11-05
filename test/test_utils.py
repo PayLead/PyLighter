@@ -73,3 +73,29 @@ def test_AdditionalOutputElement(display_type, expected_error):
             utils.AdditionalOutputElement(**args)
     else:
         assert utils.AdditionalOutputElement(**args)
+
+
+@pytest.mark.parametrize(
+    "labels, expects_assert_error",
+    [
+        ([], False),
+        (["O"], False),
+        (["O", "O", "O", "O"], False),
+        (["B-1", "O", "O", "O"], False),
+        (["O", "B-1", "O", "O"], False),
+        (["O", "B-1", "B-2", "O"], False),
+        (["B-1", "I-1", "B-2", "O"], False),
+        (["B-1", "B-1", "B-1", "B-1"], False),
+        (["B-1", "I-1", "I-1", "I-1"], False),
+        (["B-1", "I-2", "I-1", "I-1"], True),
+        (["O", "I-1", "O", "O"], True),
+        (["O", "I-1", "I-1", "I-1"], True),
+        (["O", "A-1", "O", "O"], True),
+    ],
+)
+def test_assert_IOB2_format(labels, expects_assert_error):
+    if expects_assert_error:
+        with pytest.raises(AssertionError):
+            utils.assert_IOB2_format([labels])
+    else:
+        utils.assert_IOB2_format([labels])
