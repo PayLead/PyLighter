@@ -1,0 +1,142 @@
+<svg fill="none" viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+        <defs>
+            <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP');</style>
+        </defs>
+        <style type="text/css">
+            .parent {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                top: 150px;
+                left: 50px;
+            }
+
+            .marker {
+                position: absolute;
+                top: -30px;
+                left: 0;
+                box-sizing: border-box;
+                animation: moving-marker 3s cubic-bezier(0.4, 0, 0.3, 1) infinite;
+                animation-direction: alternate;
+                transform-origin: top left;
+                transform: skew(20deg, -20deg);
+            }
+
+            .marker-ink {
+                position: absolute;
+                top: 23px;
+                left: -30px;
+                width: 45px;
+                height: 63px;
+                background-color: #2f87da;
+                transform: skewX(-20deg);
+                z-index: 1;
+            }
+
+            .marker-start {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100px;
+                width: 80px;
+                z-index: 1;
+            }
+
+            .top-start {
+                z-index: 2;
+                background:
+                    no-repeat left 0% top / 60px 50% linear-gradient(to bottom right, transparent, transparent 20%, black 20%),
+                    no-repeat left 0% bottom / 60px 50% linear-gradient(to top right, transparent, transparent 20%, black 20%);
+            }
+
+            .shadow-start {
+                top: 10px;
+                z-index: 1;
+                background:
+                    no-repeat left 0% top / 60px 50% linear-gradient(to bottom right, transparent, transparent 20%, #383535 20%),
+                    no-repeat left 0% bottom / 60px 50% linear-gradient(to top right, transparent, transparent 20%, #383535 20%);
+            }
+
+            .marker-end {
+                position: absolute;
+                top: 0;
+                left: 50px;
+                width: 150px;
+                height: 100px;
+                border-radius: 0 5px 5px 0;
+                background: rgba(29, 99, 163, 1);
+                z-index: 3;
+                box-shadow: 3px 5px 0px 5px #2f87da;
+            }
+
+            .pylighter-text {
+                font: 55px/65px 'Noto Sans JP', sans-serif, 'ArchitectsDaughterRegular';
+                color: white;
+                line-height: 56px;
+                z-index: -1;
+                position: absolute;
+            }
+
+            .pylighter-text::after {
+                animation: changing-text 12s steps(2) infinite;
+                content: 'PyLighter';
+            }
+
+            .highlight {
+                position: absolute;
+                width: 290px;
+                height: 70px;
+                left: -20px;
+                z-index: -2;
+                top: 0;
+                background-image: linear-gradient(to right, rgba(29, 99, 163, 0.6), rgba(29, 99, 163, 1));
+                animation: highlighting 3s cubic-bezier(0.4, 0, 0.3, 1) infinite;
+                animation-direction: alternate;
+            }
+
+            @keyframes highlighting {
+                0% {
+                    width: 0px;
+                }
+
+
+                100% {
+                    width: 290px;
+                }
+            }
+
+            @keyframes moving-marker {
+                0% {
+                    left: -10px;
+                }
+
+                100% {
+                    left: 280px;
+                }
+            }
+
+            @keyframes changing-text {
+                0% {
+                    content: "PyLighter"
+                }
+
+                100% {
+                    content: "PyLighter"
+                }
+            }
+        </style>
+        <div class="parent">
+            <div class="marker">
+                <div class="marker-ink"></div>
+                <div class="marker-start top-start"></div>
+                <div class="marker-start shadow-start"></div>
+                <div class="marker-end"></div>
+            </div>
+            <div class="pylighter-text text-3d"><span></span></div>
+            <div class="text-3d highlight"></div>
+        </div>
+    </div>
+  </foreignObject>
+</svg>

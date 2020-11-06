@@ -3,7 +3,7 @@
 PyLighter is a tool that allows data scientists to annotate a corpus of documents directly on Jupyter for NER (Named Entity Recognition) tasks.
 
 <span style="display:block;text-align:center">
-<img src="https://github.com/PayLead/PyLighter/blob/master/media/pylighter.gif" alt="pylighter_gif"/>
+<img align="center" src="https://github.com/PayLead/PyLighter/blob/master/media/pylighter.gif" alt="pylighter_gif"/>
 </span>
 
 ## Contents
@@ -221,3 +221,7 @@ Currently nothing has be done there -->
 MIT License
 
 <!-- ## Credits -->
+
+<span style="display:block;text-align:center">
+<img align="center" src="https://github.com/PayLead/PyLighter/blob/master/media/pylighter.svg" alt="pylighter_gif"/>
+</span>
