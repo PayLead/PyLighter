@@ -22,7 +22,7 @@ PyLighter is a tool that allows data scientists to annotate a corpus of document
 
 ## Installation
 
-From Pypi: [url](url) [coming soon]
+From Pypi: [https://pypi.org/project/pylighter/](https://pypi.org/project/pylighter/)
 
 ```
 pip install pylighter
