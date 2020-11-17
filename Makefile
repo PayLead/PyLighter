@@ -30,15 +30,18 @@ build:
 
 .PHONY: source build
 
-testall:
-	tox
-
 test:
 	pytest
 
-.PHONY: test testall
+test-quality: flake8 check-manifest isort 
 
-lint: flake8 check-manifest
+test-all:
+	tox -e py
+
+test-all-envs:
+	tox
+
+.PHONY: test test-quality test-all test-all-envs
 
 flake8:
 	flake8 $(PACKAGE)
@@ -47,4 +50,8 @@ flake8:
 check-manifest:
 	check-manifest
 
-.PHONY: lint flake8 isort check-manifest
+isort:
+	isort --check --diff $(PACKAGE)
+	isort --check --diff $(TEST_DIR)
+
+.PHONY: flake8 check-manifest isort

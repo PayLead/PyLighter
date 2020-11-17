@@ -17,7 +17,8 @@ PyLighter is a tool that allows data scientists to annotate a corpus of document
     - [Adding additional information](#adding-additional-information)
     - [Adding additional outputs](#adding-additional-outputs)
     - [Using keyboard shortcuts](#using-keyboard-shortcuts)
-- [Testing](#testing)
+- [Contributing](#contributing)
+    - [Testing](#testing)
 - [License](#license)
 
 ## Installation
@@ -201,20 +202,24 @@ ShortcutHelper()
 
 You can see more on that with [this](https://github.com/PayLead/PyLighter/blob/master/demo/Shortcut_helper.ipynb) demo.
 
-<!-- ### Full Api
+## Contributing
 
-Parse annotation docstring and put it here ? -->
-
-## Testing
+### Testing
 
 PyLighter uses _pytest_. Thus, tests can be run with:
 ```
-pytest
+make test
 ```
 
-<!-- ## Contributing
+PyLighter uses _flake8_, _isort_ and _check-manifest_ to control the quality of the code. You can test the quality of the code with:
+```
+make test-quality
+```
 
-Currently nothing has be done there -->
+If you wish to test everything including the packaging, you can run:
+```
+make test-all
+```
 
 ## License
 
