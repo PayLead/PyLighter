@@ -27,6 +27,7 @@ From Pypi: [https://pypi.org/project/pylighter/](https://pypi.org/project/pyligh
 
 ```
 pip install pylighter
+jupyter nbextension enable --py widgetsnbextension
 ```
 
 From Github: [https://github.com/PayLead/PyLighter](https://github.com/PayLead/PyLighter)
@@ -34,6 +35,7 @@ From Github: [https://github.com/PayLead/PyLighter](https://github.com/PayLead/P
 git clone git@github.com:PayLead/PyLighter.git
 cd PyLighter
 python setup.py install
+jupyter nbextension enable --py widgetsnbextension
 ```
 
 ## Demos
