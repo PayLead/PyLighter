@@ -104,6 +104,8 @@ class Annotation:
         self.labels_colors = self._init_labels_colors(labels_colors)
         self.threads = []
 
+        display_helper.start_display()
+
         all_shortcuts = standard_shortcuts[:]
         if labels_shortcuts:
             all_shortcuts += labels_shortcuts

@@ -1,15 +1,23 @@
 import functools
 
-from IPython.display import Javascript, clear_output, display
-from ipywidgets import HTML, BoundedIntText, Button, GridBox, HBox, Layout, VBox
+from IPython.display import Javascript, display
+from ipywidgets import HTML, BoundedIntText, Button, GridBox, HBox, Layout, Output, VBox
 
 from pylighter import config, utils
+
+out = Output()
+
+
+def start_display():
+    out.clear_output()
+    display(out)
 
 # -----------------------------------------------------------
 # Main display
 # -----------------------------------------------------------
 
 
+@out.capture()
 def display_header(current_index, corpus_size, move_to_function, df_additional_infos):
     """
     Display the header of the annotation composed by the index of the current document
@@ -84,6 +92,7 @@ def instantiate_additional_infos(current_index, df_additional_infos):
     return HBox(subtitle_html, layout=subtitle_layout)
 
 
+@out.capture()
 def display_top_buttons(move_function, clear_function, shortcuts_displays_helpers={}):
     """
     Display the previous, next and skip buttons. Link them to any shortcuts if given.
@@ -126,6 +135,7 @@ def display_top_buttons(move_function, clear_function, shortcuts_displays_helper
     display(hbox)
 
 
+@out.capture()
 def display_core(instantiated_core):
     display(instantiated_core)
 
@@ -300,6 +310,7 @@ def instantiate_chunks_area(labels_names):
     return chunk_area_display
 
 
+@out.capture()
 def display_chunk(chunk, chunk_text, delete_chunk_on_click):
     """
     Display the given chunk with the given text in the chunk area (next to the last one).
@@ -335,6 +346,7 @@ def display_chunk(chunk, chunk_text, delete_chunk_on_click):
     chunk_display.remove_class("invisible")
 
 
+@out.capture()
 def display_additional_outputs(additional_outputs_elements, additional_outputs_values):
     hbox_elements = ["checkbox"]
 
@@ -375,6 +387,7 @@ def display_additional_outputs(additional_outputs_elements, additional_outputs_v
     return input_elements
 
 
+@out.capture()
 def display_footer(save_function, quit_function, shortcuts_displays_helpers):
     """
     Display the footer of the annotation. It is composed of the quit and the save buttons.
@@ -401,6 +414,7 @@ def display_footer(save_function, quit_function, shortcuts_displays_helpers):
     display(hbox)
 
 
+@out.capture()
 def display_quit_text(current_index, corpus_size, start_index):
     display(
         HTML(
@@ -420,7 +434,7 @@ def display_quit_text(current_index, corpus_size, start_index):
 
 
 def clear_display():
-    clear_output(wait=True)
+    out.clear_output()
 
 
 # -----------------------------------------------------------
@@ -442,6 +456,7 @@ def highlight_chars(char_buttons, selected_labeliser, labels_names, undo):
             char_button.remove_class(f"{selected_labeliser}_color")
 
 
+@out.capture()
 def remove_chunk(chunk):
     if chunk.display_id:
         display(Javascript(utils.js_remove_el(chunk.display_id)))
@@ -462,6 +477,7 @@ def add_shortcut_to(button, name, shortcuts_displays_helpers):
     return button
 
 
+@out.capture()
 def prepare_toast():
     # Remove toast if already exists
     display(
@@ -488,6 +504,7 @@ def prepare_toast():
     )
 
 
+@out.capture()
 def show_toast(msg, success):
     js = utils.text_parser(
         "toast/toast.js",
@@ -497,6 +514,7 @@ def show_toast(msg, success):
     display(Javascript(js))
 
 
+@out.capture()
 def define_custom_styles(labels_colors, char_params):
     # Define colors for labels
     css_colors = ""
@@ -530,6 +548,7 @@ def define_custom_styles(labels_colors, char_params):
     display(HTML(f"<style>{css_styles}</style>"))
 
 
+@out.capture()
 def define_keyboard_shortcuts(shortcuts, shortcuts_class_names):
     # [Hack] Define shortcut to remove keyboard listener
     cancel_shortcuts = config.SHORTCUT_CANCEL_SHORTCUTS.to_js_shortcut(
@@ -554,6 +573,7 @@ def define_keyboard_shortcuts(shortcuts, shortcuts_class_names):
     display(Javascript(js_keyboard_listeners))
 
 
+@out.capture()
 def display_loader():
     loader = HTML(utils.text_parser("loader.html"))
     display(loader)
