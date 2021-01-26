@@ -34,13 +34,16 @@ def js_add_el_to_div(class_name_source, class_name_target):
     """
     Js function to append source element to the target one.
     """
-    js = f"document.getElementsByClassName('{class_name_target}')[0]"
-    js += f".appendChild(document.getElementsByClassName('{class_name_source}')[0])"
+    js = f"const el = document.getElementsByClassName('{class_name_target}')[0];"
+    js += "if (el) "
+    js += f"el.appendChild(document.getElementsByClassName('{class_name_source}')[0])"
     return js
 
 
 def js_remove_el(el_id_class_name):
-    return f"document.getElementsByClassName('{el_id_class_name}')[0].remove()"
+    js = f"const el = document.getElementsByClassName('{el_id_class_name}')[0];"
+    js += "if (el) el.remove()"
+    return js
 
 
 def chunk_html_display(text):

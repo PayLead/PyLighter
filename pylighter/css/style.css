@@ -1,7 +1,7 @@
 .char_display {
     font-size: <% char_font_size %> ;
     margin: 2px 0 2px 0;
-    padding:0;
+    padding: 0;
     height: 1.3em;
     width: auto;
     overflow: visible;
@@ -109,6 +109,14 @@ div.output_subarea {
     width: auto;
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.jp-RenderedJavaScript {
+    padding: 0 !important;
+}
+
+div.lm-Widget.p-Widget.lm-Panel.p-Panel.jupyter-widgets.jp-OutputArea-output:empty {
+    display: none;
 }
 
 <% colors %>
