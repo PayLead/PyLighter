@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## 0.0.3 (2021-09-23)
+### Added
+
+Support for JupyterLab
+
 ## 0.0.2 (2020-11-24)
 ### Added
 
