@@ -452,8 +452,10 @@ def highlight_chars(char_buttons, selected_labeliser, labels_names, undo):
         # Add the appropriate color the char
         if not undo:
             char_button.add_class(f"{selected_labeliser}_color")
+            char_button.tooltip = selected_labeliser
         else:
             char_button.remove_class(f"{selected_labeliser}_color")
+            char_button.tooltip = None
 
 
 @out.capture()
